@@ -1,8 +1,8 @@
 {
-  "name": "service-example",
-  "vendor": "vtex",
-  "version": "0.2.0",
-  "title": "Service Example",
+  "name": "external-order-manager",
+  "vendor": "helmethouse",
+  "version": "0.0.1",
+  "title": "external-order-manager",
   "description": "Reference app for VTEX IO Services",
   "mustUpdateAt": "2018-01-04",
   "categories": [],
