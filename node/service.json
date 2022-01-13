@@ -7,7 +7,7 @@
   "workers": 1,
   "routes": {
     "customCart": {
-      "path": "/_v/customCart/:userId/:shippingMethod",
+      "path": "/_v/customCart/:emailId/:shippingMethod",
       "public": true
     }
   }

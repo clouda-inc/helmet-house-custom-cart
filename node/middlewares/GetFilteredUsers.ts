@@ -1,5 +1,8 @@
+import { getUserData } from './GetUsersData'
+
 export async function getFilteredUsers(ctx: Context, next: () => Promise<any>) {
   const masterDatClient = ctx.clients.masterdata
+  const orgarnizationalId = await getUserData(ctx)
 
   const filteredUsers = await masterDatClient.searchDocumentsWithPaginationInfo(
     {
@@ -9,9 +12,9 @@ export async function getFilteredUsers(ctx: Context, next: () => Promise<any>) {
         page: 1,
         pageSize: 100,
       },
-      where:
-        `userId=${ctx.vtex.route.params.userId}` &&
-        `shippingMethod=${ctx.vtex.route.params.shippingMethod}`,
+      where: `userId=${
+        orgarnizationalId.find((u) => u)?.orgId
+      } AND shippingMethod=${ctx.vtex.route.params.shippingMethod}`,
       schema: 'mdv1',
     }
   )
