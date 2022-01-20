@@ -17,10 +17,13 @@
   "credentialType": "absolute",
   "policies": [
     {
+      "name": "POWER_USER_DS"
+    },
+    {
       "name": "outbound-access",
       "attrs": {
-        "host": "httpstat.us",
-        "path": "*"
+        "host": "api.vtex.com",
+        "path": "/api/dataentities/*"
       }
     },
     {
