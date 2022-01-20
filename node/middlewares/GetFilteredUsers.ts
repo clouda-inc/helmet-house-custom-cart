@@ -14,7 +14,6 @@ export async function getFilteredUsers(ctx: Context, next: () => Promise<any>) {
       where: `userId=${
         orgarnizationalId.find((u) => u)?.orgId
       } AND shippingMethod='Ground'`,
-      // where: `userId=${orgarnizationalId.find((u) => u)?.orgId}`,
       schema: 'mdv1',
     }
   )
