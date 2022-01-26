@@ -10,3 +10,4 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 
 - Add service to get shipping threshold value based on dealer
+- Adde the lint.sh file
