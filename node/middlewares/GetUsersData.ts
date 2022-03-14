@@ -20,5 +20,26 @@ export async function getUserData(ctx: Context) {
     schema: 'v0.1.0',
   })
 
-  return filteredUsers
+  const user = (filteredUsers ?? [])?.find((u) => u)
+  let costCenter
+
+  if (filteredUsers) {
+    const costCenterId = user?.costId
+
+    const costCenters = await masterDatClient.searchDocuments<CostCenter>({
+      dataEntity: 'cost_centers',
+      fields: ['id', 'name', 'addresses', 'paymentTerms', 'organization'],
+      pagination: { pageSize: 10, page: 1 },
+      schema: 'v0.0.4',
+      where: `id=${costCenterId}`,
+    })
+
+    costCenter = costCenters?.find((c) => c)
+  }
+
+  return {
+    costId: user?.costId,
+    costName: costCenter?.name,
+    orgId: user?.orgId,
+  }
 }
