@@ -34,7 +34,7 @@ export async function getUserData(ctx: Context) {
       where: `id=${costCenterId}`,
     })
 
-    costCenter = costCenters?.find((c) => c)
+    costCenter = (costCenters ?? [])?.find((c) => c)
   }
 
   return {
