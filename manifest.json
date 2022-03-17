@@ -6,7 +6,10 @@
   "description": "Reference app for VTEX IO Services",
   "mustUpdateAt": "2018-01-04",
   "categories": [],
-  "dependencies": {},
+  "dependencies": {
+    "vtex.storefront-permissions": "1.x",
+    "vtex.b2b-organizations-graphql": "0.x"
+  },
   "builders": {
     "node": "6.x",
     "docs": "0.x"
@@ -20,6 +23,19 @@
       "name": "POWER_USER_DS"
     },
     {
+      "name": "OMSViewer"
+    },
+    {
+      "name": "LogisticsAdmin"
+    },
+    {
+      "name": "outbound-access",
+      "attrs": {
+        "host": "portal.vtexcommercestable.com.br",
+        "path": "/api/oms/*"
+      }
+    },
+    {
       "name": "outbound-access",
       "attrs": {
         "host": "api.vtex.com",
@@ -27,10 +43,31 @@
       }
     },
     {
+      "name": "outbound-access",
+      "attrs": {
+        "host": "helmethouse.myvtex.com",
+        "path": "/api/oms/pvt/orders/*"
+      }
+    },
+    {
       "name": "colossus-fire-event"
     },
     {
       "name": "colossus-write-logs"
+    },
+    {
+      "name": "outbound-access",
+      "attrs": {
+        "host": "login.microsoftonline.com",
+        "path": "/8bbf4497-224a-4e9c-97eb-1c9567417325/oauth2/v2.0/*"
+      }
+    },
+    {
+      "name": "outbound-access",
+      "attrs": {
+        "host": "org0a9bfbda.crm.dynamics.com",
+        "path": "/api/data/v9.0/salesorders"
+      }
     }
   ],
   "$schema": "https://raw.githubusercontent.com/vtex/node-vtex-api/master/gen/manifest.schema"

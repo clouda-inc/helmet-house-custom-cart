@@ -1,12 +1,13 @@
 import type { ClientsConfig, ServiceContext, RecorderState } from '@vtex/api'
-import { LRUCache, method, Service } from '@vtex/api'
+import { LRUCache, method, Service, EventContext, } from '@vtex/api'
 
 import { Clients } from './clients'
 // import { status } from './middlewares/status'
 // import { validate } from './middlewares/validate'
 import { getFilteredUsers } from './middlewares/GetFilteredUsers'
+import { orderSubmitted } from './middlewares/orderSubmitted'
 
-const TIMEOUT_MS = 800
+const TIMEOUT_MS = 4000
 
 // Create a LRU memory cache for the Status client.
 // The @vtex/api HttpClient respects Cache-Control headers and uses the provided cache.
@@ -35,6 +36,17 @@ declare global {
   // We declare a global Context type just to avoid re-writing ServiceContext<Clients, State> in every handler and resolver
   type Context = ServiceContext<Clients, State>
 
+  interface StatusChangeContext extends EventContext<Clients> {
+    body: {
+      domain: string
+      orderId: string
+      currentState: string
+      lastState: string
+      currentChangeDate: string
+      lastChangeDate: string
+    }
+  }
+
   // The shape of our State object found in `ctx.state`. This is used as state bag to communicate between middlewares.
   interface State extends RecorderState {
     code: number
@@ -50,4 +62,7 @@ export default new Service({
       GET: [getFilteredUsers],
     }),
   },
+  events: {
+    orderSubmitted,
+  }
 })

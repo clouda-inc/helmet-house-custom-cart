@@ -10,5 +10,11 @@
       "path": "/_v/customCart/:emailId/:shippingMethod",
       "public": true
     }
+  },
+  "events": {
+    "orderSubmitted": {
+      "sender": "vtex.orders-broadcast",
+      "topics": ["order-created"]
+    }
   }
 }
