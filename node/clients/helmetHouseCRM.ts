@@ -144,4 +144,20 @@ export default class HelmetHouse extends ExternalClient {
       console.error('Get System Users Error.. ', error)
     }
   }
+
+  public async updateQuoteHeader(quoteId: string, order: any, token: string): Promise<any> {
+    try {
+      const url = `/api/data/v9.0/quotes(${quoteId})`
+
+      return await this.http.patch(url, order, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Prefer: 'return=representation',
+        },
+      })
+    } catch (error) {
+      console.error('addQuoteHeader: ', error)
+      return error.message
+    }
+  }
 }

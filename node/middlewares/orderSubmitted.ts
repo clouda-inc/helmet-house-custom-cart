@@ -16,9 +16,12 @@ export async function orderSubmitted(
   } = ctx
 
   try {
+    console.info('Order ID: ', ctx?.body?.orderId)
+
     const crmOrder = await getCRMOrder({ orderId: ctx?.body?.orderId }, ctx)
 
     if ((crmOrder ?? []).length > 0) {
+      console.info('Check for duplicate orders: ', crmOrder)
       return
     }
 
@@ -168,6 +171,7 @@ export async function orderSubmitted(
       hh_ordertype: customData.isProgramOrder ? 881900001 : 881900000,
       hh_signaturereq: handleSignatureOptions(),
       hh_signaturerequiredfee: parseFloat(signatureOptions?.cost),
+      statuscode: 881900003,
     }
 
     const quoteHeader = await helmetHouseClient.addQuoteHeader(
@@ -175,7 +179,11 @@ export async function orderSubmitted(
       token
     )
 
+    console.info('quoteHeader: ', quoteHeader)
+
     const quoteId = quoteHeader?.quoteid
+
+    console.info('quoteId: ', quoteId)
 
     if (quoteId) {
       const data = {
@@ -200,35 +208,60 @@ export async function orderSubmitted(
       description: order?.openTextField ?? '',
     }
 
-    await helmetHouseClient.addNotes(notesData, token)
+    const orderNotes = await helmetHouseClient.addNotes(notesData, token)
 
-    order.items.map(async (item: any, index: number) => {
-      const productDetails = await helmetHouseClient.getProduct(
-        item?.refId,
-        token
-      )
+    console.info('orderNotes: ', orderNotes)
 
-      const productId = productDetails?.value?.find(
-        (product: any) => product.productnumber === item?.refId
-      )?.productid
+    const quoteDetailPromise = await order.items.map(
+      async (item: any, index: number) => {
+        const productDetails = await helmetHouseClient.getProduct(
+          item?.refId,
+          token
+        )
 
-      const defaultuomid = productDetails?.value?.find(
-        (product: any) => product.productnumber === item?.refId
-      )?._defaultuomid_value
+        const productId = productDetails?.value?.find(
+          (product: any) => product.productnumber === item?.refId
+        )?.productid
 
-      const quoteDetailLinesData = {
-        'quoteid@odata.bind': `/quotes(${quoteId})`,
-        'productid@odata.bind': `/products(${productId})`,
-        priceperunit: item.price,
-        quantity: item.quantity,
-        lineitemnumber: index,
-        hh_warehouse: warehouse,
-        'uomid@odata.bind': `/uoms(${defaultuomid})`,
-        extendedamount: item.priceDefinition.total,
+        const defaultuomid = productDetails?.value?.find(
+          (product: any) => product.productnumber === item?.refId
+        )?._defaultuomid_value
+
+        const quoteDetailLinesData = {
+          'quoteid@odata.bind': `/quotes(${quoteId})`,
+          'productid@odata.bind': `/products(${productId})`,
+          priceperunit: item.price,
+          quantity: item.quantity,
+          lineitemnumber: index,
+          hh_warehouse: warehouse,
+          'uomid@odata.bind': `/uoms(${defaultuomid})`,
+          extendedamount: item.priceDefinition.total,
+        }
+
+        const quoteDetailLines = await helmetHouseClient.addQuoteDetailLines(
+          quoteDetailLinesData,
+          token
+        )
+
+        console.info('quoteDetailLines: ', quoteDetailLines)
       }
+    )
 
-      await helmetHouseClient.addQuoteDetailLines(quoteDetailLinesData, token)
+    await Promise.all(quoteDetailPromise).then((orderLine: any) => {
+      return orderLine
     })
+
+    const updateQuoteHeaderData = {
+      statuscode: 881900004,
+    }
+
+    const quoteHeaderUpdate = await helmetHouseClient.updateQuoteHeader(
+      quoteId,
+      updateQuoteHeaderData,
+      token
+    )
+
+    console.info('quoteHeaderUpdate: ', quoteHeaderUpdate)
   } catch (error) {
     console.error('Error in Order Submitted: ', error)
     throw error
