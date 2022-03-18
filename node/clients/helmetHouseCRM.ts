@@ -35,7 +35,7 @@ export default class HelmetHouse extends ExternalClient {
       })
     } catch (error) {
       console.error('addQuoteHeader: ', error)
-      return error.message
+      throw error
     }
   }
 
@@ -51,7 +51,7 @@ export default class HelmetHouse extends ExternalClient {
       })
     } catch (error) {
       console.error('addNotes: ', error)
-      return error.message
+      throw error
     }
   }
 
@@ -67,7 +67,7 @@ export default class HelmetHouse extends ExternalClient {
       })
     } catch (error) {
       console.error('addQuoteDetailLines: ', error)
-      return error.message
+      throw error
     }
   }
 
@@ -88,6 +88,7 @@ export default class HelmetHouse extends ExternalClient {
       return accountNumber
     } catch (error) {
       console.error('Get Account Number Error.. ', error)
+      throw error
     }
   }
 
@@ -108,6 +109,7 @@ export default class HelmetHouse extends ExternalClient {
       return contactDetails
     } catch (error) {
       console.error('Get Contact Details Error.. ', error)
+      throw error
     }
   }
 
@@ -125,6 +127,7 @@ export default class HelmetHouse extends ExternalClient {
       return productDetails
     } catch (error) {
       console.error('Get Product Error.. ', error)
+      throw error
     }
   }
 
@@ -142,6 +145,7 @@ export default class HelmetHouse extends ExternalClient {
       return systemUsers
     } catch (error) {
       console.error('Get System Users Error.. ', error)
+      throw error
     }
   }
 
@@ -157,7 +161,7 @@ export default class HelmetHouse extends ExternalClient {
       })
     } catch (error) {
       console.error('addQuoteHeader: ', error)
-      return error.message
+      throw error
     }
   }
 }
