@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [0.0.3] - 2022-03-24
+
 ### Fixed
 
 - Fix threshold not getting value.
